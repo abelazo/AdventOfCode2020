@@ -1,4 +1,3 @@
-from customs import Person
 
 def per_section(it, is_delimiter=lambda x: x.isspace()):
     ret = []
