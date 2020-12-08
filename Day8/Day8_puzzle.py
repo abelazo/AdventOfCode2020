@@ -1,5 +1,5 @@
 
-def get_instruction(instruction):
+def get_command(instruction):
     return instruction[0:3]
 
 def get_number(instruction):
@@ -8,12 +8,12 @@ def get_number(instruction):
 def execute(instruction, counter, offset):
     # Debug
     #print("Executing {}: {}".format(offset, instruction))
-    if get_instruction(instruction) == 'nop':   # nop
+    if get_command(instruction) == 'nop':   # nop
         offset += 1
-    elif get_instruction(instruction) == 'acc': # acc
+    elif get_command(instruction) == 'acc': # acc
         counter += get_number(instruction)
         offset += 1
-    else:                                       # jmp
+    else:                                   # jmp
         offset += get_number(instruction)
     return offset, counter
 
@@ -50,14 +50,12 @@ def replace(program, offset, new_instruction):
 
 
 def solve_2(program):
+    replacements = { 'nop': 'jmp', 'jmp': 'nop'}
     for i in range(len(program)):
         instruction = program[i]
-        if get_instruction(instruction) == 'nop':
-            new_instruction = instruction.replace('nop', 'jmp')
-            if solve_1(replace(program, i, new_instruction)):
-                return
-        elif get_instruction(instruction) == 'jmp':
-            new_instruction = instruction.replace('jmp', 'nop')
+        command = get_command(instruction)
+        if command in replacements.keys():
+            new_instruction = instruction.replace(command, replacements[command])
             if solve_1(replace(program, i, new_instruction)):
                 return
     
