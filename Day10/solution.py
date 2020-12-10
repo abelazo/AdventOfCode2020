@@ -26,12 +26,40 @@ def solve_1(joltages):
     ones, threes = get_differences(joltages)
     return (len(ones) * len(threes))
 
+
+
 def solve_2(joltages):
-    pass
+    joltages.append(0)
+    joltages.append(max(joltages) + 3)
+    joltages.sort()
+
+    size = len(joltages)
+    checked = {}
+
+    def arrange(i):
+        if i == size - 1:
+            return 1
+
+        if i in checked:
+            return checked[i]
+
+        arrangements = arrange(i + 1)
+        print("{} has {} arrangements".format(joltages[i], arrangements))
+
+        if i < size - 2 and joltages[i + 2] <= joltages[i] + 3:
+            arrangements += arrange(i + 2)
+        if i < size - 3 and joltages[i + 3] <= joltages[i] + 3:
+            arrangements += arrange(i + 3)
+
+        checked[i] = arrangements
+
+        return arrangements
+
+    return arrange(0)
 
 if __name__ == '__main__':
     with open('Joltages.txt') as f:
         adapters = [int(line.strip()) for line in f.readlines()]
 
-    s = solve_1(adapters)
-    print("Solution 1 is {}".format(s))
+    print("Solution 1 is {}".format(solve_1(adapters)))
+    print("Solution 2 is {}".format(solve_2(adapters)))
